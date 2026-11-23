@@ -1,0 +1,28 @@
+# Infraestructura local para desarrollo. App (Django/Next) corre en el host.
+#   docker compose -f docker-compose.dev.yml up -d
+name: gestiona-dev
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: gestiona
+      POSTGRES_USER: gestiona
+      POSTGRES_PASSWORD: gestiona
+    ports: ["5433:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gestiona"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  mailpit:
+    image: axllent/mailpit:v1.24
+    ports: ["1025:1025", "8025:8025"]
+
+volumes:
+  pgdata:

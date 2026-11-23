@@ -1,0 +1,26 @@
+# HTTPS automático (Let's Encrypt) si el dominio es público.
+# Para una red interna sin dominio público, usa `tls internal` (certificado propio de Caddy).
+{$GESTIONA_DOMAIN} {
+	encode zstd gzip
+
+	# WebSockets y API van directo a Django (ASGI)
+	@backend path /ws/* /api/* /_allauth/* /accounts/* /admin* /static/* /scim/*
+	reverse_proxy @backend backend:8000
+
+	# Avatares públicos. Los adjuntos NO se sirven aquí: pasan por la API con control de permisos.
+	handle_path /media/avatars/* {
+		root * /srv/media/avatars
+		file_server
+	}
+	@media path /media/*
+	respond @media 404
+
+	reverse_proxy frontend:3000
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy same-origin
+		-Server
+	}
+}

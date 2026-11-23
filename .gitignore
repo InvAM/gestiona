@@ -1,0 +1,16 @@
+.env
+*.pyc
+__pycache__/
+.venv/
+backend/media/
+backend/staticfiles/
+node_modules/
+.next/
+frontend/out/
+*.log
+.DS_Store
+coverage/
+.pytest_cache/
+.ruff_cache/
+.env.production
+backups/

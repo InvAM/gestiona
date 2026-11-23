@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+/* ---------- Gestiona design tokens ---------- */
+:root {
+  --bg: #ffffff;
+  --bg-subtle: #f7f8f9;
+  --bg-sunken: #f1f2f4;
+  --bg-hover: #091e420f;
+  --bg-pressed: #091e4224;
+  --bg-selected: #e9f2ff;
+  --bg-overlay: #ffffff;
+  --bg-column: #f1f2f4;
+  --text: #172b4d;
+  --text-subtle: #44546f;
+  --text-subtlest: #626f86;
+  --text-disabled: #091e424f;
+  --text-inverse: #ffffff;
+  --border: #091e4224;
+  --border-strong: #8590a2;
+  --brand: #1d5fd6;
+  --brand-hover: #174fb4;
+  --brand-pressed: #123f8f;
+  --brand-subtle: #e9f2ff;
+  --link: #1d5fd6;
+  --focus: #388bff;
+  --danger: #c9372c;
+  --danger-subtle: #ffeceb;
+  --warning: #e56910;
+  --warning-subtle: #fff7d6;
+  --success: #1f845a;
+  --success-subtle: #dcfff1;
+  --discovery: #6e5dc6;
+  --discovery-subtle: #f3f0ff;
+  /* status lozenges */
+  --lz-todo-bg: #dfe1e6;
+  --lz-todo-fg: #42526e;
+  --lz-progress-bg: #cce0ff;
+  --lz-progress-fg: #0747a6;
+  --lz-done-bg: #baf3db;
+  --lz-done-fg: #216e4e;
+  --shadow-raised: 0 1px 1px #091e4240, 0 0 1px #091e424f;
+  --shadow-overlay: 0 8px 12px #091e4226, 0 0 1px #091e424f;
+  --scrollbar: #091e4224;
+  /* categorical chart series (fixed order, validated for CVD on #fff) */
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+  --series-other: #8590a2;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1d2125;
+  --bg-subtle: #161a1d;
+  --bg-sunken: #161a1d;
+  --bg-hover: #a1bdd914;
+  --bg-pressed: #a6c5e229;
+  --bg-selected: #092957;
+  --bg-overlay: #282e33;
+  --bg-column: #161a1d;
+  --text: #c7d1db;
+  --text-subtle: #9fadbc;
+  --text-subtlest: #8c9bab;
+  --text-disabled: #bfdbf847;
+  --text-inverse: #1d2125;
+  --border: #a6c5e229;
+  --border-strong: #738496;
+  --brand: #579dff;
+  --brand-hover: #85b8ff;
+  --brand-pressed: #cce0ff;
+  --brand-subtle: #092957;
+  --link: #579dff;
+  --danger: #f87168;
+  --danger-subtle: #42221f;
+  --warning: #fea362;
+  --warning-subtle: #533f04;
+  --success: #4bce97;
+  --success-subtle: #164b35;
+  --discovery: #9f8fef;
+  --discovery-subtle: #2b273f;
+  --lz-todo-bg: #454f59;
+  --lz-todo-fg: #b6c2cf;
+  --lz-progress-bg: #09326c;
+  --lz-progress-fg: #85b8ff;
+  --lz-done-bg: #164b35;
+  --lz-done-fg: #7ee2b8;
+  --shadow-raised: 0 0 0 1px #00000000, 0 1px 1px #03040480, 0 0 1px #03040480;
+  --shadow-overlay: 0 0 0 1px #bcd6f00a, 0 8px 12px #0304045c, 0 0 1px #03040480;
+  --scrollbar: #a6c5e229;
+  /* same hues stepped for the dark surface (validated on #1d2125) */
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #0ca30c; --series-7: #9085e9; --series-8: #e66767;
+  --series-other: #738496;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-bg-hover: var(--bg-hover);
+  --color-bg-pressed: var(--bg-pressed);
+  --color-bg-selected: var(--bg-selected);
+  --color-bg-overlay: var(--bg-overlay);
+  --color-bg-column: var(--bg-column);
+  --color-fg: var(--text);
+  --color-fg-subtle: var(--text-subtle);
+  --color-fg-subtlest: var(--text-subtlest);
+  --color-fg-disabled: var(--text-disabled);
+  --color-fg-inverse: var(--text-inverse);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-pressed: var(--brand-pressed);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-discovery: var(--discovery);
+  --color-discovery-subtle: var(--discovery-subtle);
+  --shadow-raised: var(--shadow-raised);
+  --shadow-overlay: var(--shadow-overlay);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* ---------- Rich text (TipTap) ---------- */
+.rt {
+  word-wrap: break-word;
+}
+.rt p {
+  margin: 0 0 6px;
+}
+.rt p:last-child {
+  margin-bottom: 0;
+}
+.rt h1 { font-size: 22px; line-height: 28px; font-weight: 600; margin: 16px 0 6px; }
+.rt h2 { font-size: 18px; line-height: 24px; font-weight: 600; margin: 14px 0 6px; }
+.rt h3 { font-size: 16px; line-height: 22px; font-weight: 600; margin: 12px 0 4px; }
+.rt ul { list-style: disc; padding-left: 24px; margin: 4px 0 8px; }
+.rt ol { list-style: decimal; padding-left: 24px; margin: 4px 0 8px; }
+.rt li > p { margin: 0; }
+.rt a { color: var(--link); text-decoration: underline; }
+.rt blockquote { border-left: 2px solid var(--border); padding-left: 12px; color: var(--text-subtle); margin: 8px 0; }
+.rt code { background: var(--bg-sunken); padding: 1px 4px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; }
+.rt pre { background: var(--bg-sunken); padding: 10px 12px; border-radius: 4px; overflow-x: auto; margin: 8px 0; }
+.rt pre code { background: none; padding: 0; }
+.rt hr { border: 0; border-top: 1px solid var(--border); margin: 12px 0; }
+.rt ul[data-type="taskList"] { list-style: none; padding-left: 2px; }
+.rt ul[data-type="taskList"] li { display: flex; gap: 6px; align-items: flex-start; }
+.rt ul[data-type="taskList"] li > label { margin-top: 2px; }
+.rt .mention { background: var(--bg-sunken); color: var(--link); border-radius: 12px; padding: 0 6px; font-weight: 500; }
+.rt .mention.me { background: var(--brand); color: var(--text-inverse); }
+.ProseMirror { outline: none; min-height: 1.5em; }
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text-subtlest);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

@@ -1,0 +1,78 @@
+# Producción (servidor interno). Uso:
+#   cp .env.production.example .env.production   # y completa los valores
+#   docker compose --env-file .env.production up -d --build
+name: gestiona
+
+x-backend: &backend
+  build: ./backend
+  env_file: .env.production
+  environment:
+    DATABASE_URL: postgres://gestiona:${POSTGRES_PASSWORD}@postgres:5432/gestiona
+    REDIS_URL: redis://redis:6379/0
+    DEBUG: "false"
+    CELERY_TASK_ALWAYS_EAGER: "false"
+  volumes:
+    - media:/app/media
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_started }
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: gestiona
+      POSTGRES_USER: gestiona
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?define POSTGRES_PASSWORD}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gestiona"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redisdata:/data]
+    restart: unless-stopped
+
+  backend:
+    <<: *backend
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/api/v1/health')\""]
+      interval: 15s
+      retries: 5
+
+  worker:
+    <<: *backend
+    # -B: embedded beat scheduler (automation rules on a schedule). Run a single worker.
+    command: ["celery", "-A", "config", "worker", "-B", "-s", "/tmp/celerybeat-schedule", "-l", "info", "--concurrency", "2"]
+
+  frontend:
+    build:
+      context: ./frontend
+      args: { BACKEND_INTERNAL_URL: "http://backend:8000" }
+    environment:
+      BACKEND_INTERNAL_URL: http://backend:8000
+    depends_on: [backend]
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports: ["80:80", "443:443"]
+    environment:
+      GESTIONA_DOMAIN: ${GESTIONA_DOMAIN:?define GESTIONA_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - media:/srv/media:ro
+      - caddydata:/data
+    depends_on: [frontend, backend]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
+  media:
+  caddydata:
